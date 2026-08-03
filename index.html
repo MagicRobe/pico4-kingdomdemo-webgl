@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PICO4 王国 — VR 王国防守 · WebGL 试玩</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1020;          /* 深蓝黑背景 */
+    --bg2:#151a30;         /* 卡片底色 */
+    --gold:#f2c14e;        /* 强调金 */
+    --gold-dim:#c9a03c;
+    --text:#e8ecf5;
+    --muted:#98a2bd;
+    --line:rgba(242,193,78,.18);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Noto Sans SC',system-ui,-apple-system,'Microsoft YaHei',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+  /* ===== 顶部导航 ===== */
+  header{
+    position:sticky;top:0;z-index:10;
+    background:rgba(13,16,32,.85);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:1px;color:var(--gold);font-size:18px}
+  .nav-link{color:var(--muted);font-size:14px;transition:color .2s}
+  .nav-link:hover{color:var(--gold)}
+
+  /* ===== Hero ===== */
+  .hero{
+    position:relative;text-align:center;padding:80px 0 72px;
+    background:
+      radial-gradient(1200px 500px at 50% -10%, rgba(242,193,78,.08), transparent 60%),
+      linear-gradient(180deg, rgba(13,16,32,.4), var(--bg));
+  }
+  .tag{
+    display:inline-block;padding:5px 14px;border:1px solid var(--line);
+    border-radius:999px;color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:22px;
+  }
+  .hero h1{
+    font-family:'Orbitron',sans-serif;font-size:52px;font-weight:800;
+    background:linear-gradient(135deg,#f7d97a,var(--gold) 55%,#b8860b);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    line-height:1.15;
+  }
+  .sub{color:var(--muted);font-size:18px;margin-top:14px;max-width:640px;margin-left:auto;margin-right:auto}
+  .cta{display:flex;gap:16px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+  .btn{
+    padding:14px 34px;border-radius:10px;font-size:16px;font-weight:700;
+    transition:transform .15s,box-shadow .15s;cursor:pointer;border:none;
+  }
+  .btn-play{
+    background:linear-gradient(135deg,#f7d97a,var(--gold) 60%);
+    color:#1c1a0f;box-shadow:0 8px 24px rgba(242,193,78,.25);
+  }
+  .btn-play:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(242,193,78,.35)}
+  .btn-ghost{
+    background:transparent;color:var(--text);border:1px solid var(--line);
+  }
+  .btn-ghost:hover{transform:translateY(-2px);border-color:var(--gold);color:var(--gold)}
+  .hint{color:var(--muted);font-size:13px;margin-top:18px}
+
+  /* ===== 分区标题 ===== */
+  section{padding:56px 0}
+  .sec-title{
+    font-family:'Orbitron',sans-serif;font-size:24px;font-weight:700;color:var(--gold);
+    display:flex;align-items:center;gap:12px;margin-bottom:30px;
+  }
+  .sec-title::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* ===== 玩法卡片 ===== */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{
+    background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:14px;
+    padding:26px 22px;transition:transform .2s,border-color .2s;
+  }
+  .card:hover{transform:translateY(-4px);border-color:var(--line)}
+  .card .icon{font-size:34px}
+  .card h3{font-size:18px;margin:14px 0 8px;color:var(--gold)}
+  .card p{font-size:14px;color:var(--muted)}
+
+  /* ===== 操作说明 ===== */
+  .keys{
+    background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:14px;
+    padding:24px 28px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px 40px;
+  }
+  .key-item{display:flex;align-items:center;gap:16px}
+  kbd{
+    min-width:74px;text-align:center;padding:6px 12px;border-radius:6px;
+    background:#1d2440;border:1px solid rgba(255,255,255,.14);border-bottom-width:3px;
+    font-family:'Orbitron',sans-serif;font-size:13px;color:var(--gold);
+  }
+  .key-item span{font-size:14px;color:var(--text)}
+
+  /* ===== 截图 ===== */
+  .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .shot{
+    aspect-ratio:16/10;border-radius:12px;border:1px dashed var(--line);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    color:var(--muted);font-size:13px;background:var(--bg2);
+  }
+  .shot .ph{font-size:30px;margin-bottom:8px;opacity:.6}
+
+  /* ===== 页脚 ===== */
+  footer{
+    border-top:1px solid var(--line);padding:30px 0;text-align:center;
+    color:var(--muted);font-size:13px;
+  }
+
+  /* ===== 响应式 ===== */
+  @media (max-width:860px){
+    .hero h1{font-size:38px}
+    .cards{grid-template-columns:1fr}
+    .keys{grid-template-columns:1fr}
+    .shots{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">PICO4 KINGDOM</div>
+    <a class="nav-link" href="#gameplay">玩法</a>
+    <a class="nav-link" href="#controls">操作</a>
+    <a class="nav-link" href="#gallery">截图</a>
+    <a class="nav-link" href="#" target="_blank" rel="noopener">GitHub 源码</a>
+  </div>
+</header>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="tag">PICO VR · UNITY · WEBGL DEMO</div>
+    <h1>PICO4 王国</h1>
+    <p class="sub">剑与弩双武器 · 波次防守 · 天赋成长 —— 在浏览器里直接体验这款 VR 王国防守游戏</p>
+    <div class="cta">
+      <a class="btn btn-play" href="webgl/index.html">▶ 进入试玩</a>
+      <a class="btn btn-ghost" href="#" target="_blank" rel="noopener">查看源码</a>
+    </div>
+    <div class="hint">⚠ 试玩请使用桌面浏览器（Chrome / Edge），需键盘 + 鼠标</div>
+  </div>
+</section>
+
+<!-- ===== 玩法 ===== -->
+<section id="gameplay">
+  <div class="wrap">
+    <div class="sec-title">🎮 核心玩法</div>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">⚔️</div>
+        <h3>双武器战斗</h3>
+        <p>大剑近战挥砍，连弩远程射击——箭矢带重力弹道，命中敌人才消耗耐久，Shift 一键切换。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🛡️</div>
+        <h3>波次防守</h3>
+        <p>敌人一波波来袭，数量与强度持续递增。守住你的建筑目标，清场进入下一波，撑到最终胜利。</p>
+      </div>
+      <div class="card">
+        <div class="icon">📈</div>
+        <h3>天赋成长</h3>
+        <p>每局胜利结算天赋点，永久强化生命、攻击、防御、装备耐久——每一局都让角色更强。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 操作 ===== -->
+<section id="controls">
+  <div class="wrap">
+    <div class="sec-title">🕹️ 浏览器操作说明</div>
+    <div class="keys">
+      <div class="key-item"><kbd>W A S D</kbd><span>移动</span></div>
+      <div class="key-item"><kbd>鼠标</kbd><span>旋转视角</span></div>
+      <div class="key-item"><kbd>左键 / 空格</kbd><span>攻击</span></div>
+      <div class="key-item"><kbd>鼠标右键</kbd><span>举盾格挡</span></div>
+      <div class="key-item"><kbd>Shift</kbd><span>切换武器</span></div>
+      <div class="key-item"><kbd>Ctrl</kbd><span>切换盾牌</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 截图 ===== -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-title">📸 实机画面</div>
+    <div class="shots">
+      <div class="shot"><div class="ph">🖼️</div>战斗场景（待补充截图）</div>
+      <div class="shot"><div class="ph">🖼️</div>背包系统（待补充截图）</div>
+      <div class="shot"><div class="ph">🖼️</div>天赋面板（待补充截图）</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    © 2026 PICO4 王国 · 基于 Unity WebGL · 建议桌面浏览器体验<br>
+    由 Unity 项目 WebGL 构建 · 网页展示版（去 XR 演示）
+  </div>
+</footer>
+
+</body>
+</html>
