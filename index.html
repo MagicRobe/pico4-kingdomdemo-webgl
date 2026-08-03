@@ -72,6 +72,15 @@
   .btn-ghost:hover{transform:translateY(-2px);border-color:var(--gold);color:var(--gold)}
   .hint{color:var(--muted);font-size:13px;margin-top:18px}
 
+  /* ===== 内嵌游戏 ===== */
+  #play{background:var(--bg2);padding:44px 0}
+  .game-frame{
+    aspect-ratio:16/9;background:#000;border-radius:14px;
+    border:1px solid var(--line);overflow:hidden;
+  }
+  .game-frame iframe{width:100%;height:100%;border:0;display:block}
+  #play .hint{text-align:center;margin-top:14px}
+
   /* ===== 分区标题 ===== */
   section{padding:56px 0}
   .sec-title{
@@ -147,10 +156,20 @@
     <h1>PICO4 王国</h1>
     <p class="sub">剑与弩双武器 · 波次防守 · 天赋成长 —— 在浏览器里直接体验这款 VR 王国防守游戏</p>
     <div class="cta">
-      <a class="btn btn-play" href="webgl/index.html">▶ 进入试玩</a>
+      <a class="btn btn-play" href="#play" onclick="loadGame()">▶ 进入试玩</a>
       <a class="btn btn-ghost" href="#" target="_blank" rel="noopener">查看源码</a>
     </div>
     <div class="hint">⚠ 试玩请使用桌面浏览器（Chrome / Edge），需键盘 + 鼠标</div>
+  </div>
+</section>
+
+<!-- ===== 内嵌游戏 ===== -->
+<section id="play">
+  <div class="wrap">
+    <div class="game-frame">
+      <iframe id="gameFrame" allowfullscreen frameborder="0" title="PICO4 王国 WebGL 试玩"></iframe>
+    </div>
+    <div class="hint">⚠ 首次加载约 92MB，请耐心等待；全屏请点游戏画面右下角的全屏按钮</div>
   </div>
 </section>
 
@@ -211,6 +230,14 @@
     由 Unity 项目 WebGL 构建 · 网页展示版（去 XR 演示）
   </div>
 </footer>
+
+<script>
+  // 「进入试玩」点击后同页内嵌加载 WebGL（懒加载，首屏不下载 92MB）
+  function loadGame() {
+    var f = document.getElementById('gameFrame');
+    if (f && !f.getAttribute('src')) f.setAttribute('src', 'webgl/index.html');
+  }
+</script>
 
 </body>
 </html>
