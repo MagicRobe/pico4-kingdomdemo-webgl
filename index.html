@@ -35,12 +35,13 @@
   }
   .nav{display:flex;align-items:center;justify-content:space-between;height:60px}
   .brand{font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:1px;color:var(--gold);font-size:18px}
+  .nav-links{display:flex;gap:20px}
   .nav-link{color:var(--muted);font-size:14px;transition:color .2s}
   .nav-link:hover{color:var(--gold)}
 
   /* ===== Hero ===== */
   .hero{
-    position:relative;text-align:center;padding:80px 0 72px;
+    position:relative;text-align:center;padding:84px 0 76px;
     background:
       radial-gradient(1200px 500px at 50% -10%, rgba(242,193,78,.08), transparent 60%),
       linear-gradient(180deg, rgba(13,16,32,.4), var(--bg));
@@ -50,12 +51,12 @@
     border-radius:999px;color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:22px;
   }
   .hero h1{
-    font-family:'Orbitron',sans-serif;font-size:52px;font-weight:800;
+    font-family:'Orbitron',sans-serif;font-size:54px;font-weight:800;
     background:linear-gradient(135deg,#f7d97a,var(--gold) 55%,#b8860b);
     -webkit-background-clip:text;background-clip:text;color:transparent;
     line-height:1.15;
   }
-  .sub{color:var(--muted);font-size:18px;margin-top:14px;max-width:640px;margin-left:auto;margin-right:auto}
+  .sub{color:var(--muted);font-size:18px;margin-top:14px;max-width:680px;margin-left:auto;margin-right:auto}
   .cta{display:flex;gap:16px;justify-content:center;margin-top:36px;flex-wrap:wrap}
   .btn{
     padding:14px 34px;border-radius:10px;font-size:16px;font-weight:700;
@@ -72,26 +73,38 @@
   .btn-ghost:hover{transform:translateY(-2px);border-color:var(--gold);color:var(--gold)}
   .hint{color:var(--muted);font-size:13px;margin-top:18px}
 
-  /* ===== 内嵌游戏 ===== */
+  /* ===== 内嵌游戏 + 操作提示 ===== */
   #play{background:var(--bg2);padding:44px 0}
   #play .wrap{max-width:100%;padding:0 24px}
+  .play-flex{display:flex;gap:20px;align-items:flex-start;max-width:1920px;margin:0 auto}
   .game-frame{
-    aspect-ratio:16/9;background:#000;border-radius:14px;
+    flex:1;min-width:0;aspect-ratio:16/9;background:#000;border-radius:14px;
     border:1px solid var(--line);overflow:hidden;
-    max-width:1920px;margin:0 auto;
   }
   .game-frame iframe{width:100%;height:100%;border:0;display:block}
+  .play-keys{
+    width:300px;flex-shrink:0;background:var(--bg);
+    border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px 22px;
+  }
+  .play-keys h4{color:var(--gold);font-size:15px;margin-bottom:14px;font-family:'Orbitron',sans-serif}
+  .play-keys .key-item{margin-bottom:10px}
   #play .hint{text-align:center;margin-top:14px}
 
   /* ===== 分区标题 ===== */
   section{padding:56px 0}
   .sec-title{
     font-family:'Orbitron',sans-serif;font-size:24px;font-weight:700;color:var(--gold);
-    display:flex;align-items:center;gap:12px;margin-bottom:30px;
+    display:flex;align-items:center;gap:12px;margin-bottom:12px;
   }
   .sec-title::after{content:"";flex:1;height:1px;background:var(--line)}
+  .sec-desc{color:var(--muted);font-size:14px;margin-bottom:30px}
 
-  /* ===== 玩法卡片 ===== */
+  /* ===== About ===== */
+  #about p{color:var(--muted);font-size:15px;max-width:860px;margin:0 auto;text-align:center}
+  #about p + p{margin-top:12px}
+  #about strong{color:var(--gold)}
+
+  /* ===== 卡片 ===== */
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
   .card{
     background:var(--bg2);border:1px solid rgba(255,255,255,.06);border-radius:14px;
@@ -115,14 +128,26 @@
   }
   .key-item span{font-size:14px;color:var(--text)}
 
-  /* ===== 截图 ===== */
-  .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .shot{
-    aspect-ratio:16/10;border-radius:12px;border:1px dashed var(--line);
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    color:var(--muted);font-size:13px;background:var(--bg2);
+  /* ===== 查看代码 ===== */
+  .code-wrap{
+    display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;
   }
-  .shot .ph{font-size:30px;margin-bottom:8px;opacity:.6}
+  .repo-tree{
+    background:#0a0d1c;border-radius:10px;padding:20px 22px;
+    font-family:'Courier New',Consolas,monospace;font-size:13px;
+    color:var(--muted);line-height:1.95;overflow-x:auto;
+  }
+  .repo-tree .dir{color:var(--gold)}
+  .repo-tree .cmt{color:#4a5578}
+  .repo-tree .file{color:#b8c2e0}
+  .code-intro{color:var(--muted);font-size:14px}
+  .code-intro h4{color:var(--gold);margin:0 0 8px}
+  .code-intro .feature{margin-bottom:18px}
+  .code-intro code{
+    background:#1d2440;padding:2px 8px;border-radius:5px;font-size:12px;color:var(--gold);
+    font-family:'Courier New',Consolas,monospace;
+  }
+  .code-intro .btn{margin-top:8px;display:inline-block;padding:12px 28px}
 
   /* ===== 页脚 ===== */
   footer{
@@ -133,9 +158,14 @@
   /* ===== 响应式 ===== */
   @media (max-width:860px){
     .hero h1{font-size:38px}
+    .nav-links{display:none}
     .cards{grid-template-columns:1fr}
     .keys{grid-template-columns:1fr}
-    .shots{grid-template-columns:1fr}
+    .code-wrap{grid-template-columns:1fr}
+  }
+  @media (max-width:1100px){
+    .play-flex{flex-direction:column}
+    .play-keys{width:100%}
   }
 </style>
 </head>
@@ -144,10 +174,14 @@
 <header>
   <div class="wrap nav">
     <div class="brand">PICO4 KINGDOM</div>
-    <a class="nav-link" href="#gameplay">玩法</a>
-    <a class="nav-link" href="#controls">操作</a>
-    <a class="nav-link" href="#gallery">截图</a>
-    <a class="nav-link" href="https://github.com/MagicRobe/pico4-kingdomdemo-webgl" target="_blank" rel="noopener">GitHub 源码</a>
+    <div class="nav-links">
+      <a class="nav-link" href="#about">项目</a>
+      <a class="nav-link" href="#gameplay">玩法</a>
+      <a class="nav-link" href="#features">技术</a>
+      <a class="nav-link" href="#play">操作</a>
+      <a class="nav-link" href="#code">代码</a>
+      <a class="nav-link" href="https://github.com/MagicRobe/pico4-kingdomdemo-webgl" target="_blank" rel="noopener">GitHub</a>
+    </div>
   </div>
 </header>
 
@@ -156,7 +190,7 @@
   <div class="wrap">
     <div class="tag">PICO VR · UNITY · WEBGL DEMO</div>
     <h1>PICO4 王国</h1>
-    <p class="sub">剑与弩双武器 · 波次防守 · 天赋成长 —— 在浏览器里直接体验这款 VR 王国防守游戏</p>
+    <p class="sub">大剑与连弩 · 波次防守 · 天赋成长 —— 一款 PICO XR 王国防守游戏，<br>这里是在浏览器里直接体验的 WebGL 演示版（去 XR）</p>
     <div class="cta">
       <a class="btn btn-play" href="#play" onclick="loadGame()">▶ 进入试玩</a>
       <a class="btn btn-ghost" href="https://github.com/MagicRobe/pico4-kingdomdemo-webgl" target="_blank" rel="noopener">查看源码</a>
@@ -165,20 +199,50 @@
   </div>
 </section>
 
+<!-- ===== 项目简介 ===== -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-title">📜 项目简介</div>
+    <p>
+      《PICO4 王国》是一款为 <strong>PICO XR 头显</strong>打造的沉浸式王国防守游戏。玩家化身王国守卫者，挥舞<strong>大剑</strong>近战挥砍、切换<strong>连弩</strong>远程射击（箭矢带重力弹道）、举<strong>盾牌</strong>格挡，抵御一波波来袭的骷髅与双斧骷髅大军，守住建筑目标直至胜利。
+    </p>
+    <p>
+      游戏以<strong>波次防守</strong>为核心，配合每局结算的<strong>天赋成长</strong>（元进度永久强化）、波间<strong>三选一奖励</strong>、背包消耗品与战斗结算面板。所有数值由 <strong>Excel 配表（Luban 管线）</strong>驱动，改数值不用动代码。
+    </p>
+    <p>
+      本页为 <strong>WebGL 演示版</strong>：去除 XR 硬件依赖，用鼠标 + 键盘模拟 VR 操作（点击锁定鼠标后，可像头显一样 360° 观察），在桌面浏览器直接体验核心玩法。
+    </p>
+  </div>
+</section>
+
 <!-- ===== 内嵌游戏 ===== -->
 <section id="play">
   <div class="wrap">
-    <div class="game-frame">
-      <iframe id="gameFrame" allow="pointer-lock; fullscreen" frameborder="0" title="PICO4 王国 WebGL 试玩"></iframe>
+    <div class="play-flex">
+      <div class="game-frame">
+        <iframe id="gameFrame" allow="pointer-lock; fullscreen" frameborder="0" title="PICO4 王国 WebGL 试玩"></iframe>
+      </div>
+      <div class="play-keys">
+        <h4>操作说明</h4>
+        <div class="key-item"><kbd>W A S D</kbd><span>移动</span></div>
+        <div class="key-item"><kbd>鼠标移动</kbd><span>锁定后 360° 观察视角</span></div>
+        <div class="key-item"><kbd>鼠标左键</kbd><span>攻击</span></div>
+        <div class="key-item"><kbd>鼠标右键</kbd><span>举盾格挡</span></div>
+        <div class="key-item"><kbd>空格</kbd><span>跳跃</span></div>
+        <div class="key-item"><kbd>Shift</kbd><span>切换武器</span></div>
+        <div class="key-item"><kbd>Ctrl</kbd><span>切换盾牌</span></div>
+        <div class="key-item"><kbd>Alt</kbd><span>呼出鼠标</span></div>
+      </div>
     </div>
     <div class="hint">⚠ 首次加载约 92MB 请耐心等待 · 点击游戏画面锁定鼠标（360° 观察）· Alt 呼出鼠标 · 全屏点画面右下角全屏按钮</div>
   </div>
 </section>
 
-<!-- ===== 玩法 ===== -->
+<!-- ===== 核心玩法 ===== -->
 <section id="gameplay">
   <div class="wrap">
     <div class="sec-title">🎮 核心玩法</div>
+    <div class="sec-desc">大剑近战 · 连弩远程 · 盾牌格挡 · 波次防守 · 天赋成长</div>
     <div class="cards">
       <div class="card">
         <div class="icon">⚔️</div>
@@ -187,51 +251,157 @@
       </div>
       <div class="card">
         <div class="icon">🛡️</div>
-        <h3>波次防守</h3>
-        <p>敌人一波波来袭，数量与强度持续递增。守住你的建筑目标，清场进入下一波，撑到最终胜利。</p>
+        <h3>盾牌格挡</h3>
+        <p>鼠标右键举盾格挡伤害，盾牌拥有独立耐久，可切换多面盾牌，硬抗一波强敌。</p>
       </div>
       <div class="card">
-        <div class="icon">📈</div>
+        <div class="icon">🧟</div>
+        <h3>波次防守</h3>
+        <p>骷髅、双斧骷髅等敌人一波波来袭，数量与强度持续递增。守住建筑目标，清场进入下一波，撑到最终胜利。</p>
+      </div>
+      <div class="card">
+        <div class="icon">⭐</div>
         <h3>天赋成长</h3>
-        <p>每局胜利结算天赋点，永久强化生命、攻击、防御、装备耐久——每一局都让角色更强。</p>
+        <p>每局胜利结算天赋点，永久强化生命、攻击、防御、装备耐久——每一局都让角色更强（元进度）。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎒</div>
+        <h3>背包与道具</h3>
+        <p>收集治疗药水等消耗品，随时使用；波间三选一奖励，组合出你的 build。</p>
+      </div>
+      <div class="card">
+        <div class="icon">📜</div>
+        <h3>结算面板</h3>
+        <p>胜利/失败都有得分明细（波次×5 + 杀敌×1 + 建筑×5），天赋点立即到账；配合死亡重开、波次清场奖励，一局节奏完整。</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 操作 ===== -->
-<section id="controls">
+<!-- ===== 技术亮点 ===== -->
+<section id="features" style="background:var(--bg2)">
   <div class="wrap">
-    <div class="sec-title">🕹️ 浏览器操作说明</div>
-    <div class="keys">
-      <div class="key-item"><kbd>W A S D</kbd><span>移动</span></div>
-      <div class="key-item"><kbd>鼠标移动</kbd><span>锁定后 360° 观察视角</span></div>
-      <div class="key-item"><kbd>鼠标左键</kbd><span>攻击</span></div>
-      <div class="key-item"><kbd>鼠标右键</kbd><span>举盾格挡</span></div>
-      <div class="key-item"><kbd>空格</kbd><span>跳跃</span></div>
-      <div class="key-item"><kbd>Shift</kbd><span>切换武器</span></div>
-      <div class="key-item"><kbd>Ctrl</kbd><span>切换盾牌</span></div>
-      <div class="key-item"><kbd>Alt</kbd><span>呼出鼠标</span></div>
+    <div class="sec-title">⚙️ 技术要点</div>
+    <div class="sec-desc">分层架构 · 事件驱动 · 配表管线 · 三端输入 · 测试覆盖</div>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">🏗️</div>
+        <h3>分层架构</h3>
+        <p>纯 C# 规则层（Core：扣血/死亡/数值 clamp）+ 引擎层解耦，规则可脱离 Unity 独立跑测试。</p>
+      </div>
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>事件驱动</h3>
+        <p>泛型 <code>EventBus&lt;T&gt;</code> 事件总线 + ServiceLocator 服务定位，模块通过事件与服务通信，减少直接依赖。</p>
+      </div>
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>配表驱动</h3>
+        <p>Luban 管线：Excel → 强类型 C# + JSON，武器/敌人/盾牌/奖励等 14 张表，改数值不改代码。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎮</div>
+        <h3>三端输入</h3>
+        <p>统一 <code>IInputProvider</code> 接口：PICO 手柄 / WASD+鼠标 / 触屏摇杆，一套逻辑跑三端。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🧪</div>
+        <h3>测试覆盖</h3>
+        <p>EditMode + PlayMode + 独立 dotnet 测试，数值规则（扣血/死亡/经验）有测试覆盖。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🗂️</div>
+        <h3>工程化工具</h3>
+        <p>对象池、音频事件驱动、波间奖励、存档元进度，配套 Editor 工具（配表导出/字体/贴图优化）。</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 截图 ===== -->
+<!-- ===== 查看代码 ===== -->
+<section id="code" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="sec-title">💻 查看代码</div>
+    <div class="sec-desc">Unity 2022.3 + PICO XR 项目，代码分层、配表驱动、有测试</div>
+    <div class="code-wrap">
+      <div class="repo-tree">
+        <span class="dir">Assets/Script/</span><br>
+        ├─ <span class="dir">Core/</span> <span class="cmt"># 纯 C# 规则层（扣血/死亡/数值）</span><br>
+        │&nbsp;&nbsp;└─ <span class="dir">Gen/</span> <span class="cmt"># Luban 配表生成代码</span><br>
+        ├─ <span class="dir">EventBus.cs</span> <span class="cmt"># 泛型零 GC 事件总线</span><br>
+        ├─ <span class="dir">Game/</span> <span class="cmt"># 初始化流水线 / ServiceLocator / 配表加载</span><br>
+        ├─ <span class="dir">Enemy/</span> <span class="cmt"># 敌人 AI / 波次 / 血条 / 对象池</span><br>
+        ├─ <span class="dir">Player/</span> <span class="cmt"># 玩家 / 移动（三端输入）</span><br>
+        ├─ <span class="dir">Combat/</span> <span class="cmt"># 武器 / 盾牌 / 攻击</span><br>
+        ├─ <span class="dir">Input/</span> <span class="cmt"># PICO / WASD / 触屏 统一接口</span><br>
+        ├─ <span class="dir">UI/</span> <span class="cmt"># 面板基类 / 背包 / 设置 / 波间奖励 / 结算</span><br>
+        ├─ <span class="dir">Meta/</span> <span class="cmt"># 天赋成长 / 存档（元进度）</span><br>
+        ├─ <span class="dir">Audio/</span> <span class="cmt"># 音频管理器（事件驱动）</span><br>
+        └─ <span class="dir">Framework/Pool/</span> <span class="cmt"># 对象池</span><br><br>
+        <span class="dir">Luban/Datas/</span> <span class="cmt"># Excel 配表（14 张）</span><br>
+        <span class="dir">Assets/Editor/Tests/</span> <span class="cmt"># EditMode 测试</span><br>
+        <span class="dir">tests-core/</span> <span class="cmt"># 脱离 Unity 的规则层测试</span>
+      </div>
+      <div class="code-intro">
+        <div class="feature">
+          <h4>🎯 规则层纯 C# 可测</h4>
+          <p>战斗数值（扣血、死亡判定、经验升级）放在 <code>Core/</code>，零 Unity 依赖，用 <code>tests-core/</code> 独立 dotnet 测试锁定行为。</p>
+        </div>
+        <div class="feature">
+          <h4>⚡ EventBus + ServiceLocator</h4>
+          <p>泛型 <code>EventBus&lt;T&gt;</code> 用 struct 事件零 GC 通信，<code>ServiceLocator</code> O(1) 注册查找，模块互不硬引用。</p>
+        </div>
+        <div class="feature">
+          <h4>📊 Luban 配表管线</h4>
+          <p>Excel 配表 → 一键导出强类型 C# + JSON，武器攻击力、敌人血量、升级经验全配表驱动。</p>
+        </div>
+        <div class="feature">
+          <h4>🏗️ 初始化四段流水线</h4>
+          <p><code>Init → Diagnose → Validate → Activate</code> 四段式启动：模块逐个初始化（失败只记日志继续），诊断器收集结果，硬门校验，通过才启动游戏运行态——时序由结构保证。</p>
+        </div>
+        <div class="feature">
+          <h4>🗃️ 对象池 + 生命周期</h4>
+          <p>敌人走对象池复用，避免反复 Instantiate 重组件；<code>MonoBehaviourService</code> 基类代管 ServiceLocator 注册/注销，切场景自动清池，不累积驻留。</p>
+        </div>
+        <div class="feature">
+          <h4>🎮 三端输入统一</h4>
+          <p><code>IInputProvider</code> 抽象 PICO 手柄 / WASD+鼠标 / 触屏摇杆，战斗逻辑只面向接口；无真机自动回退 Fallback，WebGL 天然可用。</p>
+        </div>
+        <a class="btn btn-play" href="https://github.com/MagicRobe/pico4-kingdomdemo-webgl" target="_blank" rel="noopener">前往 GitHub 查看源码 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 玩法详情 ===== -->
 <section id="gallery">
   <div class="wrap">
-    <div class="sec-title">📸 实机画面</div>
-    <div class="shots">
-      <div class="shot"><div class="ph">🖼️</div>战斗场景（待补充截图）</div>
-      <div class="shot"><div class="ph">🖼️</div>背包系统（待补充截图）</div>
-      <div class="shot"><div class="ph">🖼️</div>天赋面板（待补充截图）</div>
+    <div class="sec-title">🎮 玩法详情</div>
+    <div class="sec-desc">近战 / 远程 / 格挡三线操作 · 三选一奖励 · 元进度成长</div>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">⚔️</div>
+        <h3>战斗系统</h3>
+        <p>大剑近战挥砍、连弩远程射击（箭矢带重力弹道），命中敌人才消耗耐久、空挥不扣；盾牌举盾格挡，耐久独立。Shift 切换武器、Ctrl 切换盾牌，一套输入三端通用。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎁</div>
+        <h3>波间奖励</h3>
+        <p>清波三选一：治疗 / 攻击 / 血量上限 / 武器等级，还能直接获得长剑、连弩、铁盾。已持有的武器自动转为等级、盾牌转为血量——奖励永不浪费。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🏆</div>
+        <h3>结算与成长</h3>
+        <p>按「波次×5 + 杀敌×1 + 建筑×5」结算天赋点，胜利失败都有得分明细面板；天赋永久强化生命、攻击、防御、装备耐久——每一局都让角色更强。</p>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    © 2026 PICO4 王国 · 基于 Unity WebGL · 建议桌面浏览器体验<br>
-    由 Unity 项目 WebGL 构建 · 网页展示版（去 XR 演示）
+    © 2026 PICO4 王国 · 基于 Unity 2022.3 · PICO XR + WebGL 双平台<br>
+    Unity 项目 WebGL 构建 · 网页展示版（去 XR 演示）· 技术栈：Unity / PICO XR / Luban / EventBus
   </div>
 </footer>
 
