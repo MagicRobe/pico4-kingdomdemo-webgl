@@ -76,18 +76,19 @@
   /* ===== 内嵌游戏 + 操作提示 ===== */
   #play{background:var(--bg2);padding:44px 0}
   #play .wrap{max-width:100%;padding:0 24px}
-  .play-flex{display:flex;gap:20px;align-items:flex-start;max-width:1920px;margin:0 auto}
+  .play-flex{display:flex;flex-direction:column;gap:20px;max-width:1920px;margin:0 auto}
   .game-frame{
-    flex:1;min-width:0;aspect-ratio:16/9;background:#000;border-radius:14px;
+    width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;
     border:1px solid var(--line);overflow:hidden;
   }
   .game-frame iframe{width:100%;height:100%;border:0;display:block}
   .play-keys{
-    width:300px;flex-shrink:0;background:var(--bg);
-    border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px 22px;
+    width:100%;background:var(--bg);
+    border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:18px 22px;
+    display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;
   }
-  .play-keys h4{color:var(--gold);font-size:15px;margin-bottom:14px;font-family:'Orbitron',sans-serif}
-  .play-keys .key-item{margin-bottom:10px}
+  .play-keys h4{color:var(--gold);font-size:15px;margin:0;font-family:'Orbitron',sans-serif}
+  .play-keys .key-item{margin:0}
   #play .hint{text-align:center;margin-top:14px}
 
   /* ===== 分区标题 ===== */
@@ -163,10 +164,6 @@
     .keys{grid-template-columns:1fr}
     .code-wrap{grid-template-columns:1fr}
   }
-  @media (max-width:1100px){
-    .play-flex{flex-direction:column}
-    .play-keys{width:100%}
-  }
 </style>
 </head>
 <body>
@@ -219,9 +216,6 @@
 <section id="play">
   <div class="wrap">
     <div class="play-flex">
-      <div class="game-frame">
-        <iframe id="gameFrame" allow="pointer-lock; fullscreen" frameborder="0" title="PICO4 王国 WebGL 试玩"></iframe>
-      </div>
       <div class="play-keys">
         <h4>操作说明</h4>
         <div class="key-item"><kbd>W A S D</kbd><span>移动</span></div>
@@ -232,6 +226,9 @@
         <div class="key-item"><kbd>Shift</kbd><span>切换武器</span></div>
         <div class="key-item"><kbd>Ctrl</kbd><span>切换盾牌</span></div>
         <div class="key-item"><kbd>Alt</kbd><span>呼出鼠标</span></div>
+      </div>
+      <div class="game-frame">
+        <iframe id="gameFrame" allow="pointer-lock; fullscreen" frameborder="0" title="PICO4 王国 WebGL 试玩"></iframe>
       </div>
     </div>
     <div class="hint">⚠ 首次加载约 92MB 请耐心等待 · 点击游戏画面锁定鼠标（360° 观察）· Alt 呼出鼠标 · 全屏点画面右下角全屏按钮</div>
