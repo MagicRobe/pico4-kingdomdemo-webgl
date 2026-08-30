@@ -39,6 +39,7 @@
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
     overflow-x:hidden;
+    overscroll-behavior-x: none;
   }
   /* 全页细微噪点/星尘背景 */
   body::before{
@@ -354,7 +355,7 @@
   <div class="wrap">
     <div class="sec-title">📜 项目简介</div>
     <p>
-      《PICO4 王国》是为 <strong>PICO XR 头显</strong>打造的王国防守游戏。你扮演王国守卫，挥舞<strong>大剑</strong>近战挥砍、切换<strong>连弩</strong>远程射击（箭矢带重力弹道）、举<strong>盾牌</strong>格挡，挡住一波波骷髅和双斧骷髅，守住建筑目标撑到胜利。
+      《PICO4 王国》是为 <strong>PICO XR 头显</strong>打造的王国防守游戏。你扮演王国守卫，挥舞<strong>大剑</strong>近战挥砍、切换<strong>连弩</strong>远程射击（箭矢带重力弹道）、举<strong>盾牌</strong>格挡，挡住一波波敌人，守住建筑目标撑到胜利。
     </p>
     <p>
       游戏以<strong>波次防守</strong>为核心，配合每局结算的<strong>天赋成长</strong>（元进度永久强化）、波间<strong>三选一奖励</strong>、背包消耗品与战斗结算面板。所有数值由 <strong>Excel 配表（Luban 管线）</strong>驱动，改数值不用动代码。
@@ -399,32 +400,32 @@
       <div class="card">
         <div class="icon">⚔️</div>
         <h3>多武器战斗</h3>
-        <p>近战远程武器自由切换，箭矢带重力弹道，命中敌人才消耗耐久，Shift 一键循环切换。</p>
+        <p>近战远程武器自由切换，箭矢带重力弹道，命中敌人才消耗耐久（空挥不扣），Shift 一键循环切换。</p>
       </div>
       <div class="card">
         <div class="icon">🛡️</div>
         <h3>盾牌格挡</h3>
-        <p>鼠标右键举盾格挡伤害，盾牌单独算耐久，可切换多面盾牌。</p>
+        <p>鼠标右键举盾格挡伤害，盾牌单独算耐久，Ctrl 切换多面盾牌。</p>
       </div>
       <div class="card">
         <div class="icon">🧟</div>
         <h3>波次防守</h3>
-        <p>骷髅、双斧骷髅等敌人一波波来袭，数量与强度持续递增。守住建筑目标，清场进入下一波，撑到最终胜利。</p>
+        <p>一波波敌人来袭，数量与强度持续递增。守住建筑目标，清场进入下一波，撑到最终胜利。</p>
       </div>
       <div class="card">
         <div class="icon">⭐</div>
         <h3>天赋成长</h3>
-        <p>每局赢了结算天赋点，永久强化生命、攻击、防御、装备耐久，跨局继承（元进度）。</p>
+        <p>每局结束按「波次×5 + 杀敌×1 + 建筑×5」结算天赋点（胜败都有），可以强化生命、攻击、防御、装备耐久，跨局继承（元进度）。</p>
       </div>
       <div class="card">
         <div class="icon">🎒</div>
         <h3>背包与道具</h3>
-        <p>治疗药水等消耗品，随时使用；波间三选一奖励任选。</p>
+        <p>治疗药水等消耗品，随时使用。</p>
       </div>
       <div class="card">
-        <div class="icon">📜</div>
-        <h3>结算面板</h3>
-        <p>胜败都有得分明细（波次×5 + 杀敌×1 + 建筑×5），天赋点立即到账；输了能重开。</p>
+        <div class="icon">🎁</div>
+        <h3>波间三选一</h3>
+        <p>清波三选一：治疗 / 攻击 / 血量上限 / 武器等级，也可能直接给长剑、连弩、铁盾。已持有的武器转武器升级、盾牌转盾牌等级。</p>
       </div>
     </div>
   </div>
@@ -449,7 +450,7 @@
       <div class="card">
         <div class="icon">📊</div>
         <h3>配表驱动</h3>
-        <p>Luban 管线：Excel → 强类型 C# + JSON，武器/敌人/盾牌/奖励等 14 张表，改数值不改代码。</p>
+        <p>Luban 管线：Excel → 强类型 C# + JSON，武器/敌人/盾牌/奖励等 15 张表，改数值不改代码。</p>
       </div>
       <div class="card">
         <div class="icon">🎮</div>
@@ -491,7 +492,7 @@
         ├─ <span class="dir">Meta/</span> <span class="cmt"># 天赋成长 / 存档（元进度）</span><br>
         ├─ <span class="dir">Audio/</span> <span class="cmt"># 音频管理器（事件驱动）</span><br>
         └─ <span class="dir">Framework/Pool/</span> <span class="cmt"># 对象池</span><br><br>
-        <span class="dir">Luban/Datas/</span> <span class="cmt"># Excel 配表（14 张）</span><br>
+        <span class="dir">Luban/Datas/</span> <span class="cmt"># Excel 配表（15 张）</span><br>
         <span class="dir">Assets/Editor/Tests/</span> <span class="cmt"># EditMode 测试</span><br>
         <span class="dir">tests-core/</span> <span class="cmt"># 脱离 Unity 的规则层测试</span>
         </span>
@@ -528,30 +529,6 @@
 </section>
 
 <!-- ===== 玩法详情 ===== -->
-<section id="gallery">
-  <div class="wrap">
-    <div class="sec-title">🎮 玩法详情</div>
-    <div class="sec-desc">近战 / 远程 / 格挡三线操作 · 三选一奖励 · 元进度成长</div>
-    <div class="cards">
-      <div class="card">
-        <div class="icon">⚔️</div>
-        <h3>战斗系统</h3>
-        <p>大剑近战挥砍、连弩远程射击（箭矢带重力弹道），命中敌人才消耗耐久、空挥不扣；盾牌举盾格挡，耐久独立。Shift 切换武器、Ctrl 切换盾牌，一套输入三端通用。</p>
-      </div>
-      <div class="card">
-        <div class="icon">🎁</div>
-        <h3>波间奖励</h3>
-        <p>清波三选一：治疗 / 攻击 / 血量上限 / 武器等级，也可能直接给长剑、连弩、铁盾。已持有的武器自动转成武器升级，盾牌转成血量上限。</p>
-      </div>
-      <div class="card">
-        <div class="icon">🏆</div>
-        <h3>结算与成长</h3>
-        <p>胜败都按「波次×5 + 杀敌×1 + 建筑×5」结算天赋点，有明细面板；天赋永久强化生命、攻击、防御、装备耐久，跨局继承。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <footer>
   <div class="wrap">
     <span class="brand-mini">PICO4 KINGDOM</span><br>
@@ -564,7 +541,17 @@
   // 「进入试玩」点击后同页内嵌加载 WebGL（懒加载，首屏不下载 92MB）
   function loadGame() {
     var f = document.getElementById('gameFrame');
-    if (f && !f.getAttribute('src')) f.setAttribute('src', 'webgl/index.html');
+    if (f && !f.getAttribute('src')) {
+      f.setAttribute('src', 'webgl/index.html');
+      // 禁止 iframe 内浏览器右键菜单（游戏内右键=举盾格挡，不能弹浏览器菜单）。
+      // iframe 内部 contextmenu 不冒泡到父页面，必须进 contentDocument 拦。
+      f.addEventListener('load', function () {
+        try {
+          var doc = f.contentDocument || (f.contentWindow && f.contentWindow.document);
+          if (doc) doc.addEventListener('contextmenu', function (e) { e.preventDefault(); return false; }, false);
+        } catch (e) { /* 跨域限制时静默：Unity 在 pointer lock 下本就吞右键 */ }
+      });
+    }
   }
 </script>
 
