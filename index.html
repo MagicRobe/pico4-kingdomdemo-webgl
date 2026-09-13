@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PICO4 王国 — VR 王国防守 · WebGL 试玩</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     PICO4 KINGDOM — 游戏官网质感（纯 CSS，零图片依赖）
+     2026-08-30 视觉升级 v2（文案与结构未动，仅重写样式）
+     ============================================================ */
+  :root{
+    --bg:#070b17;           /* 更深邃的夜色蓝黑 */
+    --bg-2:#0c1122;         /* 次级背景 */
+    --panel:#11182f;        /* 面板玻璃底 */
+    --panel-line:rgba(255,255,255,.07);
+    --gold:#f2c14e;         /* 主金 */
+    --gold-hi:#ffe9a8;      /* 高光金 */
+    --gold-deep:#b8860b;    /* 暗金 */
+    --gold-glow:rgba(242,193,78,.30);
+    --cyan:#4fd8ff;         /* 冷色点缀（科技感） */
+    --cyan-glow:rgba(79,216,255,.16);
+    --text:#eaeef7;
+    --muted:#9aa5c4;
+    --muted-2:#6d7899;
+    --line:rgba(242,193,78,.20);
+    --radius:16px;
+    --shadow:0 18px 48px -24px rgba(0,0,0,.9);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Noto Sans SC',system-ui,-apple-system,'Microsoft YaHei',sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+    overscroll-behavior-x: none;
+  }
+  /* 全页细微噪点/星尘背景 */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+    background-image:
+      radial-gradient(1px 1px at 12% 22%, rgba(255,255,255,.10) 0, transparent 100%),
+      radial-gradient(1px 1px at 68% 9%,  rgba(255,255,255,.08) 0, transparent 100%),
+      radial-gradient(1px 1px at 82% 64%, rgba(255,255,255,.07) 0, transparent 100%),
+      radial-gradient(1.5px 1.5px at 35% 78%, rgba(242,193,78,.12) 0, transparent 100%),
+      radial-gradient(1px 1px at 48% 41%, rgba(255,255,255,.06) 0, transparent 100%),
+      radial-gradient(1.5px 1.5px at 92% 35%, rgba(79,216,255,.10) 0, transparent 100%);
+    background-size:auto;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--gold);color:#1a1507}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 26px}
+
+  /* ===== 顶部导航 ===== */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(7,11,23,.72);
+    backdrop-filter:blur(14px) saturate(1.2);
+    -webkit-backdrop-filter:blur(14px) saturate(1.2);
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  header::after{
+    content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold-glow),transparent);
+    opacity:.8;
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{
+    font-family:'Orbitron',sans-serif;font-weight:800;letter-spacing:2px;
+    color:var(--gold);font-size:19px;display:flex;align-items:center;gap:10px;
+  }
+  .brand::before{
+    content:"";width:11px;height:11px;border-radius:3px;
+    background:linear-gradient(135deg,var(--gold-hi),var(--gold-deep));
+    box-shadow:0 0 14px var(--gold-glow),0 0 3px var(--gold);
+    animation:brandPulse 3.2s ease-in-out infinite;
+  }
+  @keyframes brandPulse{
+    0%,100%{box-shadow:0 0 10px var(--gold-glow),0 0 3px var(--gold)}
+    50%{box-shadow:0 0 22px var(--gold-glow),0 0 7px var(--gold)}
+  }
+  .nav-links{display:flex;gap:4px;align-items:center}
+  .nav-link{
+    position:relative;color:var(--muted);font-size:14px;font-weight:500;
+    padding:8px 14px;border-radius:8px;transition:color .2s,background .2s;
+  }
+  .nav-link::after{
+    content:"";position:absolute;left:14px;right:14px;bottom:4px;height:2px;border-radius:2px;
+    background:linear-gradient(90deg,var(--gold),var(--gold-deep));
+    transform:scaleX(0);transform-origin:left;transition:transform .25s ease;
+  }
+  .nav-link:hover{color:var(--gold);background:rgba(242,193,78,.06)}
+  .nav-link:hover::after{transform:scaleX(1)}
+
+  /* ===== Hero ===== */
+  .hero{
+    position:relative;text-align:center;overflow:hidden;
+    padding:110px 0 96px;
+    background:
+      radial-gradient(900px 420px at 50% -8%, rgba(242,193,78,.16), transparent 62%),
+      linear-gradient(180deg,#0a1020 0%, var(--bg) 100%);
+  }
+  /* 底部网格地平线 */
+  .hero::before{
+    content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+    width:140%;height:60%;pointer-events:none;
+    background:
+      repeating-linear-gradient(90deg, rgba(79,216,255,.05) 0 1px, transparent 1px 44px),
+      repeating-linear-gradient(0deg,  rgba(79,216,255,.05) 0 1px, transparent 1px 30px);
+    -webkit-mask-image:radial-gradient(60% 100% at 50% 100%, #000 20%, transparent 75%);
+            mask-image:radial-gradient(60% 100% at 50% 100%, #000 20%, transparent 75%);
+    opacity:.5;
+  }
+  /* 中央光柱 */
+  .hero::after{
+    content:"";position:absolute;left:50%;top:0;transform:translateX(-50%);
+    width:520px;height:140%;pointer-events:none;
+    background:radial-gradient(50% 50% at 50% 30%, var(--gold-glow), transparent 70%);
+    opacity:.35;filter:blur(30px);
+  }
+  .hero .wrap{position:relative;z-index:2}
+  .tag{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 18px;border-radius:999px;
+    color:var(--gold);font-size:13px;font-weight:600;letter-spacing:3px;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(242,193,78,.10), rgba(242,193,78,.02));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    margin-bottom:26px;
+  }
+  .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold-glow)}
+  .hero h1{
+    font-family:'Orbitron',sans-serif;font-size:64px;font-weight:900;
+    line-height:1.08;letter-spacing:1px;
+    background:linear-gradient(160deg,#fff7d8 0%, var(--gold-hi) 28%, var(--gold) 55%, var(--gold-deep) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 4px 28px rgba(242,193,78,.28));
+  }
+  .sub{
+    color:var(--muted);font-size:18px;line-height:1.75;
+    margin-top:18px;max-width:720px;margin-left:auto;margin-right:auto;
+  }
+  .cta{display:flex;gap:16px;justify-content:center;margin-top:40px;flex-wrap:wrap}
+  .btn{
+    position:relative;padding:15px 40px;border-radius:12px;font-size:16px;font-weight:700;
+    transition:transform .18s,box-shadow .18s;cursor:pointer;border:none;overflow:hidden;
+  }
+  .btn-play{
+    background:linear-gradient(135deg,var(--gold-hi),var(--gold) 55%,var(--gold-deep));
+    color:#221a07;box-shadow:0 10px 30px -8px var(--gold-glow),0 2px 8px rgba(0,0,0,.4);
+  }
+  .btn-play::after{
+    content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:skewX(-20deg);animation:sheen 3.4s ease-in-out infinite;
+  }
+  @keyframes sheen{0%,55%{left:-60%}85%,100%{left:130%}}
+  .btn-play:hover{transform:translateY(-3px);box-shadow:0 16px 42px -8px var(--gold-glow),0 4px 12px rgba(0,0,0,.5)}
+  .btn-ghost{
+    background:rgba(255,255,255,.02);color:var(--text);border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(6px);
+  }
+  .btn-ghost:hover{transform:translateY(-3px);border-color:var(--gold);color:var(--gold);background:rgba(242,193,78,.06)}
+  .hint{color:var(--muted-2);font-size:13px;margin-top:22px}
+  .hint strong{color:var(--muted);font-weight:600}
+
+  /* ===== 内嵌游戏 + 操作提示 ===== */
+  #play{
+    background:linear-gradient(180deg,var(--bg-2),#080d1c);
+    padding:52px 0;border-top:1px solid var(--panel-line);border-bottom:1px solid var(--panel-line);
+    position:relative;
+  }
+  #play::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(600px 300px at 50% 0%, var(--cyan-glow), transparent 70%);
+  }
+  #play .wrap{max-width:100%;padding:0 26px;position:relative;z-index:1}
+  .play-flex{display:flex;flex-direction:column;gap:20px;max-width:1880px;margin:0 auto}
+  .game-frame{
+    width:100%;aspect-ratio:16/9;background:#05070e;border-radius:18px;
+    border:1px solid rgba(255,255,255,.10);overflow:hidden;
+    box-shadow:var(--shadow),0 0 0 1px rgba(242,193,78,.08),0 0 60px -30px var(--gold-glow);
+    position:relative;
+  }
+  .game-frame iframe{width:100%;height:100%;border:0;display:block}
+  .play-keys{
+    width:100%;background:var(--panel);border:1px solid var(--panel-line);border-radius:16px;
+    padding:20px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 30px;
+    backdrop-filter:blur(8px);
+  }
+  .play-keys h4{
+    color:var(--gold);font-size:15px;font-weight:700;margin:0;
+    font-family:'Orbitron',sans-serif;letter-spacing:1px;display:flex;align-items:center;gap:8px;
+    flex-basis:100%;margin-bottom:4px;
+  }
+  .play-keys h4::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+  #play .hint{text-align:center;margin-top:16px}
+
+  /* ===== 分区标题 ===== */
+  section{padding:64px 0}
+  .sec-title{
+    font-family:'Orbitron',sans-serif;font-size:26px;font-weight:800;color:var(--gold);
+    display:flex;align-items:center;gap:14px;margin-bottom:14px;letter-spacing:1px;
+  }
+  .sec-title::before{
+    content:"";width:6px;height:26px;border-radius:3px;flex:none;
+    background:linear-gradient(180deg,var(--gold-hi),var(--gold-deep));
+    box-shadow:0 0 12px var(--gold-glow);
+  }
+  .sec-title::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+  .sec-desc{color:var(--muted);font-size:15px;margin-bottom:36px;padding-left:20px}
+
+  /* ===== About ===== */
+  #about p{
+    color:var(--muted);font-size:15px;max-width:860px;margin:0 auto;text-align:center;line-height:1.9;
+  }
+  #about p + p{margin-top:14px}
+  #about strong{color:var(--text);font-weight:700}
+  #about strong em{color:var(--gold);font-style:normal}
+  #about p:first-child strong{color:var(--gold)}
+
+  /* ===== 卡片 ===== */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{
+    position:relative;background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--radius);
+    padding:28px 24px;transition:transform .22s,border-color .22s,box-shadow .22s;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--gold-hi),var(--gold),transparent);
+    opacity:.65;transition:opacity .22s;
+  }
+  .card:hover{transform:translateY(-6px);border-color:rgba(242,193,78,.35);box-shadow:0 24px 54px -28px rgba(0,0,0,.9),0 0 44px -24px var(--gold-glow)}
+  .card:hover::before{opacity:1}
+  .card .icon{
+    font-size:34px;display:inline-block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.4));
+    transition:transform .22s;
+  }
+  .card:hover .icon{transform:translateY(-3px) scale(1.08)}
+  .card h3{font-size:18px;margin:16px 0 10px;color:var(--text);font-weight:700;letter-spacing:.3px}
+  .card p{font-size:14px;color:var(--muted);line-height:1.75}
+
+  /* ===== 操作说明 ===== */
+  .keys{
+    background:var(--panel);border:1px solid var(--panel-line);border-radius:var(--radius);
+    padding:26px 30px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px 40px;
+  }
+  .key-item{display:flex;align-items:center;gap:16px}
+  kbd{
+    min-width:78px;text-align:center;padding:6px 12px;border-radius:9px;
+    background:linear-gradient(180deg,#1a2140,#12172e);
+    border:1px solid rgba(255,255,255,.14);border-bottom-width:3px;
+    font-family:'Orbitron',sans-serif;font-size:13px;color:var(--gold-hi);font-weight:600;
+  }
+  .key-item span{font-size:14px;color:var(--text)}
+
+  /* ===== 查看代码（终端窗质感） ===== */
+  .code-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch}
+  .repo-tree{
+    position:relative;background:#090d1b;border-radius:14px;
+    border:1px solid rgba(255,255,255,.09);overflow:hidden;
+    font-family:'JetBrains Mono','Fira Code','Courier New',Consolas,monospace;font-size:13px;
+    color:var(--muted);line-height:1.95;
+  }
+  .repo-tree::before{
+    content:"pico4-kingdomdemo — 📁 项目结构";
+    display:block;padding:12px 20px 12px 54px;
+    background:linear-gradient(180deg,#141a30,#0f1426);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    font-family:'Noto Sans SC',sans-serif;font-size:12px;color:var(--muted);
+    letter-spacing:.5px;
+  }
+  .repo-tree::after{
+    content:"";position:absolute;top:19px;left:16px;width:9px;height:9px;border-radius:50%;
+    background:#f5645f;box-shadow:11px 0 0 #f0bb43,22px 0 0 #4fc36b;
+  }
+  .repo-tree .tree-body{display:block;padding:18px 22px;overflow-x:auto}
+  .repo-tree .dir{color:var(--gold)}
+  .repo-tree .cmt{color:#4a5578}
+  .repo-tree .file{color:#b8c2e0}
+  .code-intro{color:var(--muted);font-size:14px;display:flex;flex-direction:column}
+  .code-intro h4{
+    color:var(--text);margin:0 0 6px;font-size:15px;font-weight:700;letter-spacing:.2px;
+  }
+  .code-intro .feature{
+    margin-bottom:20px;padding-left:16px;border-left:2px solid rgba(242,193,78,.25);
+    transition:border-color .2s;
+  }
+  .code-intro .feature:hover{border-left-color:var(--gold)}
+  .code-intro code{
+    background:rgba(242,193,78,.10);padding:2px 8px;border-radius:6px;font-size:12px;
+    color:var(--gold-hi);font-family:'JetBrains Mono','Courier New',Consolas,monospace;
+  }
+  .code-intro .btn{
+    margin-top:auto;display:inline-block;padding:13px 30px;align-self:flex-start;
+  }
+
+  /* ===== 页脚 ===== */
+  footer{
+    border-top:1px solid var(--panel-line);padding:34px 0;text-align:center;
+    color:var(--muted-2);font-size:13px;background:var(--bg-2);line-height:1.9;
+  }
+  footer .brand-mini{color:var(--gold);font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:2px}
+
+  /* ===== 响应式 ===== */
+  @media (max-width:900px){
+    .hero h1{font-size:42px}
+    .nav-links{display:none}
+    .cards{grid-template-columns:1fr}
+    .keys{grid-template-columns:1fr}
+    .code-wrap{grid-template-columns:1fr}
+    .section{padding:48px 0}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">PICO4 KINGDOM</div>
+    <div class="nav-links">
+      <a class="nav-link" href="#about">项目</a>
+      <a class="nav-link" href="#gameplay">玩法</a>
+      <a class="nav-link" href="#features">技术</a>
+      <a class="nav-link" href="#play">操作</a>
+      <a class="nav-link" href="#code">代码</a>
+      <a class="nav-link" href="https://github.com/MagicRobe/pico4-kingdomdemo-webgl" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="tag">PICO VR · UNITY · WEBGL DEMO</div>
+    <h1>PICO4 王国</h1>
+    <p class="sub">大剑与连弩 · 波次防守 · 天赋成长 —— PICO XR 王国防守游戏，<br>这里是在浏览器里直接玩的 WebGL 演示版（去 XR）</p>
+    <div class="cta">
+      <a class="btn btn-play" href="#play" onclick="loadGame()">▶ 进入试玩</a>
+      <a class="btn btn-ghost" href="https://github.com/MagicRobe/pico4-kingdomdemo-webgl" target="_blank" rel="noopener">查看源码</a>
+    </div>
+    <div class="hint">⚠ 桌面浏览器（Chrome / Edge）体验最佳 · 点击游戏画面锁定鼠标 · Alt 呼出鼠标</div>
+  </div>
+</section>
+
+<!-- ===== 项目简介 ===== -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-title">📜 项目简介</div>
+    <p>
+      《PICO4 王国》是为 <strong>PICO XR 头显</strong>打造的王国防守游戏。你扮演王国守卫，挥舞<strong>大剑</strong>近战挥砍、切换<strong>连弩</strong>远程射击（箭矢带重力弹道）、举<strong>盾牌</strong>格挡，挡住一波波敌人，守住建筑目标撑到胜利。
+    </p>
+    <p>
+      游戏以<strong>波次防守</strong>为核心，配合每局结算的<strong>天赋成长</strong>（元进度永久强化）、波间<strong>三选一奖励</strong>、背包消耗品与战斗结算面板。所有数值由 <strong>Excel 配表（Luban 管线）</strong>驱动，改数值不用动代码。
+    </p>
+    <p>
+      本页为 <strong>WebGL 演示版</strong>：去除 XR 硬件依赖，用鼠标 + 键盘模拟 VR 操作（点击锁定鼠标后，可像头显一样 360° 观察），在桌面浏览器直接体验核心玩法。
+    </p>
+  </div>
+</section>
+
+<!-- ===== 内嵌游戏 ===== -->
+<section id="play">
+  <div class="wrap">
+    <div class="play-flex">
+      <div class="play-keys">
+        <h4>操作说明</h4>
+        <div class="key-item"><kbd>W A S D</kbd><span>移动</span></div>
+        <div class="key-item"><kbd>鼠标移动</kbd><span>锁定后 360° 观察视角</span></div>
+        <div class="key-item"><kbd>鼠标左键</kbd><span>攻击</span></div>
+        <div class="key-item"><kbd>鼠标右键</kbd><span>举盾格挡</span></div>
+        <div class="key-item"><kbd>空格</kbd><span>跳跃</span></div>
+        <div class="key-item"><kbd>Shift</kbd><span>切换武器</span></div>
+        <div class="key-item"><kbd>Ctrl</kbd><span>切换盾牌</span></div>
+        <div class="key-item"><kbd>Alt</kbd><span>呼出鼠标</span></div>
+        <div class="key-item"><kbd>B</kbd><span>打开背包</span></div>
+        <div class="key-item"><kbd>Esc</kbd><span>呼出鼠标 · 再按打开设置</span></div>
+      </div>
+      <div class="game-frame">
+        <iframe id="gameFrame" allow="pointer-lock; fullscreen" frameborder="0" title="PICO4 王国 WebGL 试玩"></iframe>
+      </div>
+    </div>
+    <div class="hint">⚠ 首次加载约 92MB 请耐心等待 · 点击游戏画面锁定鼠标（360° 观察）· Alt 呼出鼠标 · 全屏点画面右下角全屏按钮</div>
+  </div>
+</section>
+
+<!-- ===== 核心玩法 ===== -->
+<section id="gameplay">
+  <div class="wrap">
+    <div class="sec-title">🎮 核心玩法</div>
+    <div class="sec-desc">大剑近战 · 连弩远程 · 盾牌格挡 · 波次防守 · 天赋成长</div>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">⚔️</div>
+        <h3>多武器战斗</h3>
+        <p>近战远程武器自由切换，箭矢带重力弹道，命中敌人才消耗耐久（空挥不扣），Shift 一键循环切换。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🛡️</div>
+        <h3>盾牌格挡</h3>
+        <p>鼠标右键举盾格挡伤害，盾牌单独算耐久，Ctrl 切换多面盾牌。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🧟</div>
+        <h3>波次防守</h3>
+        <p>一波波敌人来袭，数量与强度持续递增。守住建筑目标，清场进入下一波，撑到最终胜利。</p>
+      </div>
+      <div class="card">
+        <div class="icon">⭐</div>
+        <h3>天赋成长</h3>
+        <p>每局结束按「波次×5 + 杀敌×1 + 建筑×5」结算天赋点（胜败都有），可以强化生命、攻击、防御、装备耐久，跨局继承（元进度）。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎒</div>
+        <h3>背包与道具</h3>
+        <p>治疗药水等消耗品，随时使用。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎁</div>
+        <h3>波间三选一</h3>
+        <p>清波三选一：治疗 / 攻击 / 血量上限 / 武器等级，也可能直接给长剑、连弩、铁盾。已持有的武器转武器升级、盾牌转盾牌等级。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 技术亮点 ===== -->
+<section id="features" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="sec-title">⚙️ 技术要点</div>
+    <div class="sec-desc">分层架构 · 事件驱动 · 配表管线 · 三端输入 · 测试覆盖</div>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">🏗️</div>
+        <h3>分层架构</h3>
+        <p>纯 C# 规则层（Core：扣血/死亡/数值 clamp）+ 引擎层解耦，规则可脱离 Unity 独立跑测试。</p>
+      </div>
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>事件驱动</h3>
+        <p>泛型 <code>EventBus&lt;T&gt;</code> 事件总线 + ServiceLocator 服务定位，模块通过事件与服务通信，减少直接依赖。</p>
+      </div>
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>配表驱动</h3>
+        <p>Luban 管线：Excel → 强类型 C# + JSON，武器/敌人/盾牌/奖励等 15 张表，改数值不改代码。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🎮</div>
+        <h3>三端输入</h3>
+        <p>统一 <code>IInputProvider</code> 接口：PICO 手柄 / WASD+鼠标 / 触屏摇杆，一套逻辑跑三端。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🧪</div>
+        <h3>测试覆盖</h3>
+        <p>EditMode + PlayMode + 独立 dotnet 测试，数值规则（扣血/死亡/经验）有测试覆盖。</p>
+      </div>
+      <div class="card">
+        <div class="icon">🗂️</div>
+        <h3>工程化工具</h3>
+        <p>对象池、音频事件驱动、波间奖励、存档元进度，配套 Editor 工具（配表导出/字体/贴图优化）。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 查看代码 ===== -->
+<section id="code" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="sec-title">💻 查看代码</div>
+    <div class="sec-desc">Unity 2022.3 + PICO XR 项目，代码分层、配表驱动、有测试</div>
+    <div class="code-wrap">
+      <div class="repo-tree">
+        <span class="tree-body">
+        <span class="dir">Assets/Script/</span><br>
+        ├─ <span class="dir">Core/</span> <span class="cmt"># 纯 C# 规则层（扣血/死亡/数值）</span><br>
+        │&nbsp;&nbsp;└─ <span class="dir">Gen/</span> <span class="cmt"># Luban 配表生成代码</span><br>
+        ├─ <span class="dir">EventBus.cs</span> <span class="cmt"># 泛型零 GC 事件总线</span><br>
+        ├─ <span class="dir">Game/</span> <span class="cmt"># 初始化流水线 / ServiceLocator / 配表加载</span><br>
+        ├─ <span class="dir">Enemy/</span> <span class="cmt"># 敌人 AI / 波次 / 血条 / 对象池</span><br>
+        ├─ <span class="dir">Player/</span> <span class="cmt"># 玩家 / 移动（三端输入）</span><br>
+        ├─ <span class="dir">Combat/</span> <span class="cmt"># 武器 / 盾牌 / 攻击</span><br>
+        ├─ <span class="dir">Input/</span> <span class="cmt"># PICO / WASD / 触屏 统一接口</span><br>
+        ├─ <span class="dir">UI/</span> <span class="cmt"># 面板基类 / 背包 / 设置 / 波间奖励 / 结算</span><br>
+        ├─ <span class="dir">Meta/</span> <span class="cmt"># 天赋成长 / 存档（元进度）</span><br>
+        ├─ <span class="dir">Audio/</span> <span class="cmt"># 音频管理器（事件驱动）</span><br>
+        └─ <span class="dir">Framework/Pool/</span> <span class="cmt"># 对象池</span><br><br>
+        <span class="dir">Luban/Datas/</span> <span class="cmt"># Excel 配表（15 张）</span><br>
+        <span class="dir">Assets/Editor/Tests/</span> <span class="cmt"># EditMode 测试</span><br>
+        <span class="dir">tests-core/</span> <span class="cmt"># 脱离 Unity 的规则层测试</span>
+        </span>
+      </div>
+      <div class="code-intro">
+        <div class="feature">
+          <h4>🎯 规则层纯 C# 可测</h4>
+          <p>战斗数值（扣血、死亡判定、经验升级）放在 <code>Core/</code>，零 Unity 依赖，用 <code>tests-core/</code> 独立 dotnet 测试锁定行为。</p>
+        </div>
+        <div class="feature">
+          <h4>⚡ EventBus + ServiceLocator</h4>
+          <p>泛型 <code>EventBus&lt;T&gt;</code> 用 struct 事件零 GC 通信，<code>ServiceLocator</code> O(1) 注册查找，模块互不硬引用。</p>
+        </div>
+        <div class="feature">
+          <h4>📊 Luban 配表管线</h4>
+          <p>Excel 配表 → 一键导出强类型 C# + JSON，武器攻击力、敌人血量、升级经验全配表驱动。</p>
+        </div>
+        <div class="feature">
+          <h4>🏗️ 初始化四段流水线</h4>
+          <p><code>Init → Diagnose → Validate → Activate</code> 四段式启动：模块逐个初始化（失败只记日志继续），诊断器收集结果，硬门校验通过才启动运行态——顺序由结构保证。</p>
+        </div>
+        <div class="feature">
+          <h4>🗃️ 对象池 + 生命周期</h4>
+          <p>敌人走对象池复用，避免反复 Instantiate 重组件；<code>MonoBehaviourService</code> 基类代管 ServiceLocator 注册/注销，切场景自动清池，不累积驻留。</p>
+        </div>
+        <div class="feature">
+          <h4>🎮 三端输入统一</h4>
+          <p><code>IInputProvider</code> 抽象 PICO 手柄 / WASD+鼠标 / 触屏摇杆，战斗逻辑只面向接口；无真机自动回退 Fallback，WebGL 可用。</p>
+        </div>
+        <a class="btn btn-play" href="https://github.com/MagicRobe/pico4-kingdomdemo-webgl" target="_blank" rel="noopener">前往 GitHub 查看源码 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="brand-mini">PICO4 KINGDOM</span><br>
+    © 2026 PICO4 王国 · 基于 Unity 2022.3 · PICO XR + WebGL 双平台<br>
+    Unity 项目 WebGL 构建 · 网页展示版（去 XR 演示）· 技术栈：Unity / PICO XR / Luban / EventBus
+  </div>
+</footer>
+
+<script>
+  // 「进入试玩」点击后同页内嵌加载 WebGL（懒加载，首屏不下载 92MB）
+  function loadGame() {
+    var f = document.getElementById('gameFrame');
+    if (f && !f.getAttribute('src')) {
+      f.setAttribute('src', 'webgl/index.html');
+      // 禁止 iframe 内浏览器右键菜单（游戏内右键=举盾格挡，不能弹浏览器菜单）。
+      // iframe 内部 contextmenu 不冒泡到父页面，必须进 contentDocument 拦。
+      f.addEventListener('load', function () {
+        try {
+          var doc = f.contentDocument || (f.contentWindow && f.contentWindow.document);
+          if (doc) doc.addEventListener('contextmenu', function (e) { e.preventDefault(); return false; }, false);
+        } catch (e) { /* 跨域限制时静默：Unity 在 pointer lock 下本就吞右键 */ }
+      });
+    }
+  }
+</script>
+
+</body>
+</html>
