@@ -1,0 +1,8 @@
+# shell 脚本必须保持 LF，否则 shebang 变成 "#!/usr/bin/env bash\r" 无法执行
+*.sh text eol=lf
+
+# 构建产物与图片是二进制，禁止任何换行转换
+# （本机 core.autocrlf=true，不钉死的话 git 会按文本启发式判定并报警告）
+*.unityweb binary
+*.png binary
+*.ico binary
